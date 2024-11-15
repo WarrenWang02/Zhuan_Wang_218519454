@@ -1,0 +1,138 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\main.js||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.js||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\initShaders2.js||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Common\\initShaders2.js||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\main.html||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.html||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\initShaders.js||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Common\\initShaders.js||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\objects.js||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:objects.js||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\MV.js||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Common\\MV.js||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\webgl-utils.js||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Common\\webgl-utils.js||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.js",
+              "DocumentMoniker": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\main.js",
+              "RelativeDocumentMoniker": "main.js",
+              "ToolTip": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\main.js",
+              "RelativeToolTip": "main.js",
+              "ViewState": "AgIAAH8AAAAAAAAAAAAkwKIAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-14T04:16:51.527Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "main.html",
+              "DocumentMoniker": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\main.html",
+              "RelativeDocumentMoniker": "main.html",
+              "ToolTip": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\main.html",
+              "RelativeToolTip": "main.html",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAAIQAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-11-14T07:40:10.103Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "objects.js",
+              "DocumentMoniker": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\objects.js",
+              "RelativeDocumentMoniker": "objects.js",
+              "ToolTip": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\objects.js",
+              "RelativeToolTip": "objects.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-14T04:16:51.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "webgl-utils.js",
+              "DocumentMoniker": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\webgl-utils.js",
+              "RelativeDocumentMoniker": "Common\\webgl-utils.js",
+              "ToolTip": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\webgl-utils.js",
+              "RelativeToolTip": "Common\\webgl-utils.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-14T04:16:44.197Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MV.js",
+              "DocumentMoniker": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\MV.js",
+              "RelativeDocumentMoniker": "Common\\MV.js",
+              "ToolTip": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\MV.js",
+              "RelativeToolTip": "Common\\MV.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-14T04:16:44.155Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "initShaders2.js",
+              "DocumentMoniker": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\initShaders2.js",
+              "RelativeDocumentMoniker": "Common\\initShaders2.js",
+              "ToolTip": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\initShaders2.js",
+              "RelativeToolTip": "Common\\initShaders2.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-14T04:16:44.109Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "initShaders.js",
+              "DocumentMoniker": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\initShaders.js",
+              "RelativeDocumentMoniker": "Common\\initShaders.js",
+              "ToolTip": "D:\\YorkUniversity\\Year4FallClass\\eecs3431\\a2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\eecs3431TemplateA2-v5-3Tex-3Units-WebGl2\\Common\\initShaders.js",
+              "RelativeToolTip": "Common\\initShaders.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-11-14T04:16:38.497Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
