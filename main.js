@@ -1,5 +1,23 @@
 ﻿// Template code for A2 Fall 2021 -- DO NOT DELETE THIS LINE
 
+/*
+ * Made by Zhuan Wang 218519454
+ * 
+ * Code Overview:
+ * 1. I have added a few new global variables, all clearly commented for better understanding.
+ * 2. Main HTML has been slightly modified to include a new texture (texture4) as a gradient color shader. 
+ *    Textures 2 and 3 are new image textures added for rendering.
+ * 3. Several helper functions have been created to facilitate animation, and most of the animation control logic 
+ *    is placed at the end of this file for easy management and expansion.
+ * 4. The render function has been extensively modified to construct a hierarchical character model with a 
+ *    moveable arm and nested animations to ensure smooth character, guns and bullets movements. Additional elements include:
+ *    - A spawning range for objects
+ *    - Multiple targets
+ *    - A functioning gun for interactions
+ * 
+ * This organization ensures modularity and flexibility for future expansions or optimizations.
+ */
+
 var canvas;
 var gl;
 
@@ -28,6 +46,7 @@ var materialSpecular = vec4( 0.4, 0.4, 0.4, 1.0 );
 var materialShininess = 30.0;
 
 //new material
+var clearC = vec4(0.1, 0.1, 0.1, 1.0);
 var redC = 0;
 var greenC = 1;
 var materialRed = vec4(1.0, 0.0, 0.0, 1.0);
@@ -67,6 +86,10 @@ let animPhase = 0;
 let recoilRotation = 0;
 let personRotation = 0;
 
+let floorTexture = 2;
+let floorScale = 10;
+let gradientOffset = 0;
+
 //Bullet
 let bulletExist = 0;
 let bulletPos = 0;            // Current position of the bullet
@@ -85,7 +108,7 @@ let lastFPSUpdateTime = 0;         // Last time FPS was updated (using TIME)
 //Range
 let rangeStart = 0;
 let rangeMove = 0; //control range things raise
-let rangeMove2 = 10; //control range things drop
+let rangeMove2 = 30; //control range things drop
 
 
 // ------------ Images for textures stuff --------------
@@ -168,6 +191,11 @@ function initTextures() {
     
     textureArray.push({}) ;
     loadFileTexture(textureArray[textureArray.length-1],"floortexture.png") ;
+    
+    textureArray.push({}) ;
+    textureArray[3].textureWebGL = gl.createTexture();
+    textureArray[3].image = { src: "gradient-generated" }; // have to make it as an image to fake for the waiting&check function
+    textureArray[3].isTextureReady = true;
     
     
 }
@@ -277,7 +305,7 @@ window.onload = function init() {
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 0.5, 0.5, 1.0, 1.0 );
+    gl.clearColor(clearC[0], clearC[1], clearC[2], clearC[3]);
     
     gl.enable(gl.DEPTH_TEST);
 
@@ -426,21 +454,26 @@ function gPush() {
 }
 
 function render() {
-    let timePause = 0; //pauseTime
+
+    //These are testing and debuging codes
+    let timePause = 0; //pauseTime >>test and frameset
     
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     frameCount++;
     
     if (timePause){
-        eye = vec3(30, 10, 15); //origin 5 5 10 > 2 1 0
+        eye = vec3(-2, 5, 10); //origin 5 5 10 > 2 1 0
         //eye = vec3(15, 15, 30);
 
         //modify at and up
-        at = vec3(18.0, 0.0, 0.0); // origin 0 0 0 >20 0 0
+        at = vec3(0.0, 0.0, 0.0); // origin 0 0 0 >20 0 0
         //up = vec3(0.0, 1.0, 0.0);
-        //fov = 45;
+        fov = 45;
+        leftArmRotation = -160;
+        leftForearmRotation = 120;
     }
+    //=====================================
         
    
     // set the projection matrix
@@ -473,16 +506,42 @@ function render() {
     gl.activeTexture(gl.TEXTURE2);
     gl.bindTexture(gl.TEXTURE_2D, textureArray[2].textureWebGL);
     gl.uniform1i(gl.getUniformLocation(program, "texture3"), 2);
+
+    gl.activeTexture(gl.TEXTURE3);
+    gl.bindTexture(gl.TEXTURE_2D, textureArray[3].textureWebGL);
+    gl.uniform1i(gl.getUniformLocation(program, "texture4"), 3);
+
+    // gradient Shader
+    const gradientData = new Uint8Array([
+        255, 0, gradientOffset % 256, 255, 
+        0, 255, gradientOffset % 256, 255, 
+        gradientOffset % 256, 0, 255, 255, 
+        255, gradientOffset % 256, 0, 255  // Yellow
+    ]);
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        2,
+        2,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        gradientData
+    );
+
     //*/
 
     //=======================================================================
     //Here's my main code
     
+    gl.clearColor(clearC[0], clearC[1], clearC[2], clearC[3]);
+
     gPush(); //basic floor
     gTranslate(0, -5, 0);
-    gScale(10, 0.3, 10);
+    gScale(floorScale, 0.3, floorScale);
     setColor(vec4(0.2, 0.2, 0.2, 1.0));
-    setTexture(2, 1);
+    setTexture(floorTexture, 1);
     drawCube();
     setTexture(0, 0);
     gPop();
@@ -524,106 +583,10 @@ function render() {
         } else {
             TIME = 2; //set TIME when pausing
         }
-        
-
-        //ANIMES
-        // 0 - 5 sec
-        if (TIME >= 0 && TIME <= 5) {
-            if (TIME >= 0 && TIME <= 2) {
-                leftArmRotation = animateVariable(0, 2, -150, -40, TIME);
-            }
-            if (TIME > 2 && TIME <= 3.5) {
-                leftArmRotation = animateVariable(2, 3.5, -40, -70, TIME);
-            }
-            
-            if (TIME >= 0 && TIME <= 2) {
-                leftForearmRotation = animateVariable(0, 2, -20, -70, TIME);
-            }
-            if (TIME > 2 && TIME <= 3.5) {
-                leftForearmRotation = animateVariable(2, 3.5, -70, -30, TIME);
-            }
-        }
-
-        // 3 - 8 sec
-        if (TIME >= 3 && TIME <= 8) {
-            eye[0] = animateVariable(3, 8, 5, 2, TIME);
-            eye[1] = animateVariable(3, 8, 5, 1, TIME);
-            eye[2] = animateVariable(3, 8, 10, 0, TIME);
-            at[0] = animateVariable(3, 8, 0, 20, TIME);
-        }
-
-        // 4 - 9 sec
-        if (TIME >= 4 && TIME <= 5) {
-            leftForearmRotation2 = animateVariable(4, 5, -10, 10, TIME);
-        }
-        if (TIME >= 5 && TIME <= 6) {
-            leftForearmRotation2 = animateVariable(5, 6, 10, -10, TIME);
-        }
-        if (TIME >= 6 && TIME <= 7) {
-            leftForearmRotation2 = animateVariable(6, 7, -10, 10, TIME);
-        }
-        if (TIME >= 7 && TIME <= 8) {
-            leftForearmRotation2 = animateVariable(7, 8, 10, -10, TIME);
-        }
-        if (TIME >= 8 && TIME <= 9) {
-            leftForearmRotation2 = animateVariable(8, 9, -10, 10, TIME);
-        }
-            
-        
-        // 9 - 10 sec
-        if (TIME >= 9 && TIME <= 10) {
-            leftForearmRotation2 = animateVariable(9, 10, 10, 0, TIME);
-        }
-
-        // 10 sec: gunShoot() starts
-        if (TIME >= 10 && TIME <= 10.65) {
-            recoilRotation = animateVariable(10, 10.5, 0, 20, TIME) ||
-                             animateVariable(10.5, 10.65, 20, 0, TIME);
-        }
-
-        if (TIME >= 10 && TIME <= 11) {
-            bulletExist = 1;
-            bulletPos = animateVariable(10, 11, 0, 50, TIME);
-            eye[0] = animateVariable(10, 11, 2, 20, TIME);
-            eye[1] = animateVariable(10, 11, 2, 0, TIME);
-            eye[2] = animateVariable(10, 11, 0, 0, TIME);
-        }
-
-        // Sec 11 - 14: Camera and FOV changes
-        if (TIME >= 11 && TIME <= 14) {
-            bulletExist = 0; //bulletDisappear
-            redC = 1.0;    // Set red component of an object
-            eye[0] = animateVariable(11, 14, eye[0], 40, TIME); 
-            eye[1] = animateVariable(11, 14, eye[1], 30, TIME); 
-            eye[2] = animateVariable(11, 14, eye[2], 20, TIME); 
-            at[0] = animateVariable(11, 14, at[0], 15, TIME);   
-            at[1] = at[1];                                      // Y unchanged
-            at[2] = at[2];                                      // Z unchanged
-            fov = animateVariable(11, 14, 90, 45, TIME);        // Field of View (FOV)
-        }
-
-        // Sec 14 - 20: Camera, FOV, and at changes
-        if (TIME >= 14 && TIME <= 20) {
-            eye[0] = animateVariable(14, 20, eye[0], 30, TIME); 
-            eye[1] = animateVariable(14, 20, eye[1], 10, TIME); 
-            eye[2] = animateVariable(14, 20, eye[2], 15, TIME); 
-            at[0] = animateVariable(14, 20, at[0], 18, TIME);   
-            fov = animateVariable(14, 20, 45, 90, TIME);        
-        }
-
-        // Sec 14 - 17: Non-linear rangeMove and rangeStart
-        if (TIME >= 14 && TIME <= 17) {
-            let t = (TIME - 14) / (17 - 14); // Normalized time (0 to 1)
-            rangeMove = 10 * Math.sin(t * Math.PI / 2); // Easing with sine for smooth transition
-            rangeStart = 1; // Set to 1 at the start of this range
-        }
-
-        // Sec 17 - 20: rangeMove2 linearly decreases
-        if (TIME >= 17 && TIME <= 20) {
-            rangeMove2 = animateVariable(17, 20, 30, 0, TIME); // Linearly decreases
-        }
-
     }
+
+    animateControl();
+
     window.requestAnimFrame(render);
 
 
@@ -634,7 +597,7 @@ function render() {
         frameCount = 0;            // Reset frame count
 
         // Output FPS, TIME, and animFlag values to the console
-        console.log(`FPS: ${fps}, TIME: ${TIME.toFixed(2)}, animFlag: ${animFlag}, monitoring: ${redC}`);
+        console.log(`FPS: ${fps}, TIME: ${TIME.toFixed(2)}, animFlag: ${animFlag}, monitoring: ${gradientOffset}`);
     }
 
 }
@@ -901,3 +864,259 @@ function drawRange(){
     }
     
 }
+
+function animateControl(){
+    //ANIMES
+    // 0 - 5 sec
+    if (TIME >= 0 && TIME <= 5) {
+        if (TIME >= 0 && TIME <= 2) {
+            leftArmRotation = animateVariable(0, 2, -150, -40, TIME);
+        }
+        if (TIME > 2 && TIME <= 3.5) {
+            leftArmRotation = animateVariable(2, 3.5, -40, -70, TIME);
+        }
+            
+        if (TIME >= 0 && TIME <= 2) {
+            leftForearmRotation = animateVariable(0, 2, -20, -70, TIME);
+        }
+        if (TIME > 2 && TIME <= 3.5) {
+            leftForearmRotation = animateVariable(2, 3.5, -70, -30, TIME);
+        }
+    }
+
+    // 3 - 8 sec
+    if (TIME >= 3 && TIME <= 8) {
+        eye[0] = animateVariable(3, 8, 5, 2, TIME);
+        eye[1] = animateVariable(3, 8, 5, 1, TIME);
+        eye[2] = animateVariable(3, 8, 10, 0, TIME);
+        at[0] = animateVariable(3, 8, 0, 20, TIME);
+    }
+
+    // 4 - 9 sec
+    if (TIME >= 4 && TIME <= 5) {
+        leftForearmRotation2 = animateVariable(4, 5, -10, 10, TIME);
+    }
+    if (TIME >= 5 && TIME <= 6) {
+        leftForearmRotation2 = animateVariable(5, 6, 10, -10, TIME);
+    }
+    if (TIME >= 6 && TIME <= 7) {
+        leftForearmRotation2 = animateVariable(6, 7, -10, 10, TIME);
+    }
+    if (TIME >= 7 && TIME <= 8) {
+        leftForearmRotation2 = animateVariable(7, 8, 10, -10, TIME);
+    }
+    if (TIME >= 8 && TIME <= 9) {
+        leftForearmRotation2 = animateVariable(8, 9, -10, 10, TIME);
+    }
+            
+        
+    // 9 - 10 sec
+    if (TIME >= 9 && TIME <= 10) {
+        leftForearmRotation2 = animateVariable(9, 10, 10, 0, TIME);
+    }
+
+    // 10 sec: gunShoot() starts
+    if (TIME >= 10 && TIME <= 10.65) {
+        recoilRotation = animateVariable(10, 10.5, 0, 20, TIME) ||
+                            animateVariable(10.5, 10.65, 20, 0, TIME);
+    }
+
+    if (TIME >= 10 && TIME <= 11) {
+        bulletExist = 1;
+        bulletPos = animateVariable(10, 11, 0, 50, TIME);
+        eye[0] = animateVariable(10, 11, 2, 20, TIME);
+        eye[1] = animateVariable(10, 11, 2, 0, TIME);
+        eye[2] = animateVariable(10, 11, 0, 0, TIME);
+    }
+
+    // Sec 11 - 14: Camera and FOV changes
+    if (TIME >= 11 && TIME <= 14) {
+        bulletExist = 0; //bulletDisappear
+        redC = 1.0;    // Set red component of an object
+        eye[0] = animateVariable(11, 14, eye[0], 40, TIME); 
+        eye[1] = animateVariable(11, 14, eye[1], 30, TIME); 
+        eye[2] = animateVariable(11, 14, eye[2], 20, TIME); 
+        at[0] = animateVariable(11, 14, at[0], 15, TIME);   
+        at[1] = at[1];                                      // Y unchanged
+        at[2] = at[2];                                      // Z unchanged
+        fov = animateVariable(11, 14, 90, 45, TIME);        // Field of View (FOV)
+    }
+
+    // Sec 14 - 20: Camera, FOV, and at changes
+    if (TIME >= 14 && TIME <= 20) {
+        eye[0] = animateVariable(14, 20, eye[0], 30, TIME); 
+        eye[1] = animateVariable(14, 20, eye[1], 10, TIME); 
+        eye[2] = animateVariable(14, 20, eye[2], 15, TIME); 
+        at[0] = animateVariable(14, 20, at[0], 18, TIME);   
+        fov = animateVariable(14, 20, 45, 90, TIME);        
+    }
+
+    // Sec 14 - 17: Non-linear rangeMove and rangeStart
+    if (TIME >= 14 && TIME <= 17) {
+        let t = (TIME - 14) / (17 - 14); // Normalized time (0 to 1)
+        rangeMove = 10 * Math.sin(t * Math.PI / 2); // Easing with sine for smooth transition
+        rangeStart = 1; // Set to 1 at the start of this range
+    }
+
+    // Sec 17 - 20: rangeMove2 linearly decreases
+    if (TIME >= 17 && TIME <= 20) {
+        rangeMove2 = animateVariable(17, 20, 30, 0, TIME); // Linearly decreases
+    }
+
+    // Sec 20 - 22: redC fades from 1 to 0
+    if (TIME >= 20 && TIME <= 22) {
+        redC = animateVariable(20, 22, 1, 0, TIME);
+    }
+
+    // Sec 22 - 24: personRotation rotates from 0 to -10
+    if (TIME >= 22 && TIME <= 24) {
+        personRotation = animateVariable(22, 24, 0, -10, TIME);
+    }
+
+    // Sec 24 - 25: gunshoot series movement
+    if (TIME >= 24 && TIME <= 24.5) {
+        recoilRotation = animateVariable(24, 24.5, 0, 20, TIME);
+    }
+    if (TIME >= 24.5 && TIME <= 24.65) {
+        recoilRotation = animateVariable(24.5, 24.65, 20, 0, TIME);
+    }
+    if (TIME >= 24 && TIME <= 25) {
+        bulletExist = 1; // Bullet appears
+        bulletPos = animateVariable(24, 25, 0, 50, TIME);
+    }
+    if (TIME > 25) {
+        bulletExist = 0; // Bullet disappears after sec 25
+    }
+
+    // Sec 24 - 27: personRotation rotates from -10 to 10
+    if (TIME >= 25 && TIME <= 27) {
+        personRotation = animateVariable(24, 27, -10, 10, TIME);
+    }
+
+    // Sec 27 - 28: gunshoot series again
+    if (TIME >= 27 && TIME <= 27.5) {
+        recoilRotation = animateVariable(27, 27.5, 0, 20, TIME);
+    }
+    if (TIME >= 27.5 && TIME <= 27.65) {
+        recoilRotation = animateVariable(27.5, 27.65, 20, 0, TIME);
+    }
+    if (TIME >= 27 && TIME <= 28) {
+        bulletExist = 1; // Bullet appears
+        bulletPos = animateVariable(27, 28, 0, 50, TIME);
+    }
+    if (TIME > 28) {
+        bulletExist = 0;
+        floorTexture = 3;
+    }
+
+    // Sec 28 - 29: personRotation from 10 to 0
+    if (TIME >= 28 && TIME <= 29) {
+        personRotation = animateVariable(28, 29, 10, 0, TIME);
+    }
+
+    // Sec 29 - 30: gunshoot series
+    if (TIME >= 29 && TIME <= 29.5) {
+        recoilRotation = animateVariable(29, 29.5, 0, 20, TIME);
+    }
+    if (TIME >= 29.5 && TIME <= 29.65) {
+        recoilRotation = animateVariable(29.5, 29.65, 20, 0, TIME);
+    }
+    if (TIME >= 29 && TIME <= 30) {
+        bulletExist = 1; // Bullet appears
+        bulletPos = animateVariable(29, 30, 0, 50, TIME);
+    }
+    if (TIME > 30) {
+        bulletExist = 0; // Bullet disappears after sec 30
+        gradientOffset += 5; // gradiant change
+        redC = 1.0;
+    }
+
+    // Sec 30 - 32: floorScale from 10 to 50
+    if (TIME >= 30 && TIME <= 32) {
+        floorScale = animateVariable(30, 32, 10, 50, TIME);
+    }
+
+    // Sec 20 - 25: eye transitions from (30, 10, 15) to (20, 20, 0)
+    if (TIME >= 20 && TIME <= 25) {
+        eye[0] = animateVariable(20, 25, 30, 20, TIME);
+        eye[1] = animateVariable(20, 25, 10, 20, TIME);
+        eye[2] = animateVariable(20, 25, 15, 0, TIME);
+    }
+
+    // Sec 27 - 30: eye transitions back to (30, 20, 15)
+    if (TIME >= 27 && TIME <= 30) {
+        eye[0] = animateVariable(27, 30, eye[0], 30, TIME);
+        eye[1] = animateVariable(27, 30, eye[1], 20, TIME);
+        eye[2] = animateVariable(27, 30, eye[2], 15, TIME);
+    }
+
+    // Sec 30 - 35: eye, at, and arm rotations
+    if (TIME >= 30 && TIME <= 35) {
+        // eye transitions to (-2, 5, 10)
+        eye[0] = animateVariable(30, 35, eye[0], -2, TIME);
+        eye[1] = animateVariable(30, 35, eye[1], 5, TIME);
+        eye[2] = animateVariable(30, 35, eye[2], 10, TIME);
+
+        // at transitions from (18, 0, 0) to (0, 0, 0)
+        at[0] = animateVariable(30, 35, 18, 0, TIME);
+        at[1] = animateVariable(30, 35, 0, 0, TIME);
+        at[2] = animateVariable(30, 35, 0, 0, TIME);
+
+        // Left arm and forearm rotations
+        leftArmRotation = animateVariable(30, 35, -70, -160, TIME);
+        leftForearmRotation = animateVariable(30, 35, -30, 120, TIME);
+        fov = animateVariable(30, 35, 90, 45, TIME);
+    }
+
+    //bgc change
+    // Sec 0 - 2: clearC transitions from (0.1, 0.1, 0.1, 1) to (0.4, 0.4, 0.4, 1)
+    if (TIME >= 0 && TIME <= 2) {
+        clearC[0] = animateVariable(0, 2, 0.1, 0.4, TIME);
+        clearC[1] = animateVariable(0, 2, 0.1, 0.4, TIME);
+        clearC[2] = animateVariable(0, 2, 0.1, 0.4, TIME);
+        clearC[3] = 1.0; // Alpha remains constant
+    }
+
+    // Sec 11 - 14: clearC transitions to light red (1.0, 0.6, 0.6, 1)
+    if (TIME >= 11 && TIME <= 14) {
+        clearC[0] = animateVariable(11, 14, clearC[0], 1.0, TIME);
+        clearC[1] = animateVariable(11, 14, clearC[1], 0.6, TIME);
+        clearC[2] = animateVariable(11, 14, clearC[2], 0.6, TIME);
+        clearC[3] = 1.0;
+    }
+
+    // Sec 30 - 35: clearC transitions to almost white (0.9, 0.9, 0.9, 1)
+    if (TIME >= 30 && TIME <= 35) {
+        clearC[0] = animateVariable(30, 35, clearC[0], 0.9, TIME);
+        clearC[1] = animateVariable(30, 35, clearC[1], 0.9, TIME);
+        clearC[2] = animateVariable(30, 35, clearC[2], 0.9, TIME);
+        clearC[3] = 1.0;
+    }
+
+
+}
+
+/* //I want to make the gradient color texture animated but have no time to finish this part until I submit
+function updateGradient() {
+    gradientOffset += 1; // Increment the offset
+    const gradientData = new Uint8Array([
+        255, 0, gradientOffset % 256, 255, // Red gradient
+        0, 255, gradientOffset % 256, 255, // Green gradient
+        gradientOffset % 256, 0, 255, 255, // Blue gradient
+        255, gradientOffset % 256, 0, 255  // Yellow gradient
+    ]);
+
+    gl.bindTexture(gl.TEXTURE_2D, textureArray[3].textureWebGL);
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        2,
+        2,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        gradientData
+    );
+}
+*/
