@@ -72,6 +72,8 @@ uniform sampler2D texture2;
 uniform sampler2D texture3;
 uniform int useTextures ;
 
+uniform int currentTexture;
+
 in vec4 fColor;
 in vec2 fTexCoord ;
 in vec4 fColorFromVer ;
@@ -87,10 +89,21 @@ main()
     fragColor = fColor;
     if( useTextures == 1)
     {
+        /*
         c1 = texture( texture1, fTexCoord );
         c2 = texture( texture2, fTexCoord );
         c3 = texture( texture3, fTexCoord );
         fragColor = mix(c3,mix(c1,c2,0.5),0.7);
+        */
+        ///*
+        if (currentTexture == 0) {
+            fragColor = texture(texture1, fTexCoord);
+        } else if (currentTexture == 1) {
+            fragColor = texture(texture2, fTexCoord);
+        } else if (currentTexture == 2) {
+            fragColor = texture(texture3, fTexCoord);
+        }
+        //*/
     }
     fragColor.a = 1.0 ;
 

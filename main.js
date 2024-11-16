@@ -54,7 +54,7 @@ var TIME = 0.0 ; // Realtime
 var resetTimerFlag = true ;
 var animFlag = false ;
 var prevTime = 0.0 ;
-var useTextures = 0 ;
+var useTextures = 1 ; //always open now
 
 
 //new codes
@@ -167,10 +167,17 @@ function initTextures() {
     loadFileTexture(textureArray[textureArray.length-1],"woodtexture.png") ;
     
     textureArray.push({}) ;
-    loadImageTexture(textureArray[textureArray.length-1],"floortexture.png") ;
+    loadFileTexture(textureArray[textureArray.length-1],"floortexture.png") ;
     
     
 }
+
+//new
+function setTexture(textureIndex, useTextures) {
+    gl.uniform1i(gl.getUniformLocation(program, "currentTexture"), textureIndex);
+    gl.uniform1i( gl.getUniformLocation(program, "useTextures"), useTextures);
+}
+
 
 
 function handleTextureLoaded(textureObj) {
@@ -207,6 +214,8 @@ function setColor(c)
     gl.uniform1f( gl.getUniformLocation(program, 
                                         "shininess"),materialShininess );
 }
+
+
 
 function toggleTextures() {
     useTextures = 1 - useTextures ;
@@ -278,6 +287,8 @@ window.onload = function init() {
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     
+    //new! init currentTexture value
+    gl.uniform1i(gl.getUniformLocation(program, "currentTexture"), 2);
  
     // Load canonical objects and their attributes
     Cube.init(program);
@@ -285,7 +296,7 @@ window.onload = function init() {
     Cone.init(9,program) ;
     Sphere.init(36,program) ;
 
-    gl.uniform1i( gl.getUniformLocation(program, "useTextures"), useTextures );
+    gl.uniform1i( gl.getUniformLocation(program, "useTextures"), useTextures ); //useTextures full control
 
     // record the locations of the matrices that are used in the shaders
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
@@ -294,8 +305,8 @@ window.onload = function init() {
     
     // set a default material
     setColor(materialDiffuse) ;
+
     
-  
     
     // set the callbacks for the UI elements
     document.getElementById("sliderXi").oninput = function() {
@@ -470,11 +481,10 @@ function render() {
     gPush(); //basic floor
     gTranslate(0, -5, 0);
     gScale(10, 0.3, 10);
-    //gl.activeTexture(gl.TEXTURE2);
-    //gl.bindTexture(gl.TEXTURE_2D, textureArray[2].textureWebGL);
-    //gl.uniform1i(gl.getUniformLocation(program, "useTexture"), 2);
     setColor(vec4(0.2, 0.2, 0.2, 1.0));
+    setTexture(2, 1);
     drawCube();
+    setTexture(0, 0);
     gPop();
 
     gPush();
@@ -519,18 +529,18 @@ function render() {
         //ANIMES
         // 0 - 5 sec
         if (TIME >= 0 && TIME <= 5) {
-            if (TIME >= 0 && TIME <= 3) {
-                leftArmRotation = animateVariable(0, 3, -150, -40, TIME);
+            if (TIME >= 0 && TIME <= 2) {
+                leftArmRotation = animateVariable(0, 2, -150, -40, TIME);
             }
-            if (TIME > 3 && TIME <= 5) {
-                leftArmRotation = animateVariable(3, 5, -40, -70, TIME);
+            if (TIME > 2 && TIME <= 3.5) {
+                leftArmRotation = animateVariable(2, 3.5, -40, -70, TIME);
             }
             
-            if (TIME >= 0 && TIME <= 2.5) {
-                leftForearmRotation = animateVariable(0, 2.5, -20, -70, TIME);
+            if (TIME >= 0 && TIME <= 2) {
+                leftForearmRotation = animateVariable(0, 2, -20, -70, TIME);
             }
-            if (TIME > 2.5 && TIME <= 5) {
-                leftForearmRotation = animateVariable(2.5, 5, -70, -30, TIME);
+            if (TIME > 2 && TIME <= 3.5) {
+                leftForearmRotation = animateVariable(2, 3.5, -70, -30, TIME);
             }
         }
 
@@ -543,10 +553,23 @@ function render() {
         }
 
         // 4 - 9 sec
-        if (TIME >= 4 && TIME <= 9) {
-            leftForearmRotation2 = animateVariable(4, 9, -10, 10, TIME);
+        if (TIME >= 4 && TIME <= 5) {
+            leftForearmRotation2 = animateVariable(4, 5, -10, 10, TIME);
         }
-
+        if (TIME >= 5 && TIME <= 6) {
+            leftForearmRotation2 = animateVariable(5, 6, 10, -10, TIME);
+        }
+        if (TIME >= 6 && TIME <= 7) {
+            leftForearmRotation2 = animateVariable(6, 7, -10, 10, TIME);
+        }
+        if (TIME >= 7 && TIME <= 8) {
+            leftForearmRotation2 = animateVariable(7, 8, 10, -10, TIME);
+        }
+        if (TIME >= 8 && TIME <= 9) {
+            leftForearmRotation2 = animateVariable(8, 9, -10, 10, TIME);
+        }
+            
+        
         // 9 - 10 sec
         if (TIME >= 9 && TIME <= 10) {
             leftForearmRotation2 = animateVariable(9, 10, 10, 0, TIME);
@@ -597,7 +620,7 @@ function render() {
 
         // Sec 17 - 20: rangeMove2 linearly decreases
         if (TIME >= 17 && TIME <= 20) {
-            rangeMove2 = animateVariable(17, 20, 10, 0, TIME); // Linearly decreases
+            rangeMove2 = animateVariable(17, 20, 30, 0, TIME); // Linearly decreases
         }
 
     }
@@ -817,8 +840,9 @@ function animateVariable(startTime, endTime, startValue, endValue, currentTime) 
 function drawRange(){
     if (rangeStart){
         //>>here start a new texture for all the range
+        setTexture(1, 1);
+
         //from bottom raise
-        useTextures = 1 ;
         gPush();
         gTranslate(0, rangeMove - 10, 0);
             gPush();
@@ -852,6 +876,8 @@ function drawRange(){
             gPop();
         gPop();
 
+        setTexture(1, 0); //before is the barricates that is wood
+
         //from top drop
         gPush();
         gTranslate(0, rangeMove2, 0);
@@ -871,7 +897,7 @@ function drawRange(){
         gPop();
 
         gPop();
-        useTextures = 0 ;
+        
     }
     
 }
